@@ -123,7 +123,13 @@ class FluxBinnerConv(Binner):
         if isinstance(spectrum[0], np.ndarray):
             return self.bindown2d(wngrid, spectrum, grid_width=grid_width, error=error, in_wavenumber = in_wavenumber)
         else:
-            return self.bindown1d(wngrid, spectrum, grid_width=grid_width, error=error, in_wavenumber = in_wavenumber)
+
+            # This assumes the spectrum is the same length * len(binners) 
+
+            wngrid2d = np.broadcast_to(wngrid, (len(self.binners), len(wngrid)))
+            spectrum2d = spectrum.reshape((len(self.binners), -1))
+
+            return self.bindown2d(wngrid2d, spectrum2d, grid_width=grid_width, error=error, in_wavenumber = in_wavenumber)
         #elif spectrum.ndim == 2:
             
 
